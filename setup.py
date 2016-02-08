@@ -12,31 +12,37 @@
 #       names of its contributors may be used to endorse or promote products
 #       derived from this software without specific prior written permission.
 #
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL ANDRES MOREIRA BE LIABLE FOR ANY
-# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL ANDRES MOREIRA BE LIABLE FOR ANY DIRECT,
+# INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+# OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import sys
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
 version = '0.5'
 long_description = """
 Python bindings for the snappy compression library from Google.
 
 More details about Snappy library: http://code.google.com/p/snappy
+
+This package is statically built against the snappy codebase so that we do not
+need to ship libsnappy.so together with the python module. This makes it easier
+to host on PyPi.
 """
 
-
 snappymodule = Extension('_snappy',
-                         libraries=['snappy'],
-                         sources=['snappymodule.cc', 'crc32c.c'])
+                         sources=[
+                             'snappymodule.cc', 'crc32c.c',
+                             'snappy-c.cc', 'snappy-sinksource.cc',
+                             'snappy-stubs-internal.cc', 'snappy.cc',
+                         ])
 
 ext_modules = [snappymodule]
 packages = ['.']
@@ -47,36 +53,45 @@ if 'PyPy' in sys.version:
     ext_modules = []
     install_requires = ['cffi']
 
-setup(
-    name='python-snappy',
-    version=version,
-    author='Andres Moreira',
-    author_email='andres@andresmoreira.com',
-    url='http://github.com/andrix/python-snappy',
-    description='Python library for the snappy compression library from Google',
-    long_description=long_description,
-    keywords='snappy, compression, google',
-    license='BSD',
-    classifiers=['Development Status :: 4 - Beta',
-                 'Topic :: Internet',
-                 'Topic :: Software Development',
-                 'Topic :: Software Development :: Libraries',
-                 'Topic :: System :: Archiving :: Compression',
-                 'License :: OSI Approved :: BSD License',
-                 'Intended Audience :: Developers',
-                 'Intended Audience :: System Administrators',
-                 'Operating System :: MacOS :: MacOS X',
-                 # 'Operating System :: Microsoft :: Windows', -- Not tested yet
-                 'Operating System :: POSIX',
-                 'Programming Language :: Python :: 2.5',
-                 'Programming Language :: Python :: 2.6',
-                 'Programming Language :: Python :: 2.7',
-                 'Programming Language :: Python :: 3',
-                 'Programming Language :: Python :: 3.0',
-                 'Programming Language :: Python :: 3.1',
-                 'Programming Language :: Python :: 3.2',
-                 ],
-    ext_modules = ext_modules,
-    packages = packages,
-    install_requires = install_requires
-)
+
+def main():
+    setup(
+        # This particular distribution is used as a dependency for the PyAFF4
+        # library for easy deployment.
+        name='aff4-snappy',
+        version=version,
+        author='Andres Moreira',
+        author_email='andres@andresmoreira.com',
+        url='http://github.com/andrix/python-snappy',
+        description=(
+            'Python library for the snappy compression library from Google'),
+        long_description=long_description,
+        keywords='snappy, compression, google',
+        license='BSD',
+        classifiers=['Development Status :: 4 - Beta',
+                     'Topic :: Internet',
+                     'Topic :: Software Development',
+                     'Topic :: Software Development :: Libraries',
+                     'Topic :: System :: Archiving :: Compression',
+                     'License :: OSI Approved :: BSD License',
+                     'Intended Audience :: Developers',
+                     'Intended Audience :: System Administrators',
+                     'Operating System :: MacOS :: MacOS X',
+                     'Operating System :: Microsoft :: Windows',
+                     'Operating System :: POSIX',
+                     'Programming Language :: Python :: 2.5',
+                     'Programming Language :: Python :: 2.6',
+                     'Programming Language :: Python :: 2.7',
+                     'Programming Language :: Python :: 3',
+                     'Programming Language :: Python :: 3.0',
+                     'Programming Language :: Python :: 3.1',
+                     'Programming Language :: Python :: 3.2',
+                    ],
+        ext_modules=ext_modules,
+        packages=packages,
+        install_requires=install_requires
+    )
+
+
+if __name__ == "__main__":
+    main()

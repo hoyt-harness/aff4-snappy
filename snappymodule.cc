@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Python.h"
 #include <string.h>
 #include <stdio.h>
-#include <snappy-c.h>
+#include "snappy-c.h"
 #include "crc32c.h"
 
 #define MODULE_VERSION "0.4.1"
@@ -214,7 +214,7 @@ static PyMethodDef snappy_methods[] = {
     {"isValidCompressed",  snappy__is_valid_compressed_buffer, METH_VARARGS,
         "Returns True if the compressed buffer is valid, False otherwise"},
     {"_crc32c",  snappy__crc32c, METH_VARARGS,
-        "Generate an RFC3720, section 12.1 CRC-32C"},
+         "Generate an RFC3720, section 12.1 CRC-32C"},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
