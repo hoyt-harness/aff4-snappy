@@ -37,11 +37,7 @@
 #define THIRD_PARTY_SNAPPY_OPENSOURCE_SNAPPY_STUBS_PUBLIC_H_
 
 
-#if defined(_MSC_VER)
 #include "stdint.h"
-#else
-#include <stdint.h>
-#endif
 
 #if 1
 #include <stddef.h>
@@ -91,8 +87,8 @@ typedef std::string string;
 // Windows does not have an iovec type, yet the concept is universally useful.
 // It is simple to define it ourselves, so we put it inside our own namespace.
 struct iovec {
-	void* iov_base;
-	size_t iov_len;
+        void* iov_base;
+        size_t iov_len;
 };
 #endif
 

@@ -26,7 +26,7 @@
 import sys
 from setuptools import setup, Extension
 
-version = '0.5'
+version = '0.5.1'
 long_description = """
 Python bindings for the snappy compression library from Google.
 
