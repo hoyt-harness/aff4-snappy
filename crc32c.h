@@ -17,11 +17,7 @@
 #define __CRC32C_H__
 
 #include <stdlib.h>
-#if defined(_MSC_VER)
 #include "stdint.h"
-#else
-#include <stdint.h>
-#endif
 
 #ifdef __cplusplus
 extern "C" {
